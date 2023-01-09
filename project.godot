@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Fk Simple Rogu"
-run/main_scene="res://scenes/level.tscn"
+run/main_scene="res://scenes/level/level.tscn"
 config/icon="res://icon.png"
 
 [editor]

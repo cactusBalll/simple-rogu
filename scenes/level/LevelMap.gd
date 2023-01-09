@@ -9,12 +9,12 @@ const bound = Rect2(0, 0, map_size, map_size)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+	randomize()
 	generate()
 	for i in range(map_size):
 		for j in range(map_size):
 			if mapp.get_xy(i,j) == 0:
-				set_cell(i,j, 2)
+				set_cell(i,j, 3)
 			elif mapp.get_xy(i,j) == 1:
 				set_cell(i,j, 0)
 	pass # Replace with function body.
@@ -39,6 +39,18 @@ class MapOfMap:
 		
 	func get_xyv(v: Vector2):
 		return get_xy(v.x,v.y)
+		
+	func get_random_empty() -> Vector2:
+		for i in range(20): # num tries
+			var t = randi() % map.size()
+			if map[t] == 0:
+				return Vector2(t % map_size, t / map_size)
+		for i in range(map_size):
+			for j in range(map_size):
+				if self.get_xy(i, j) == 1:
+					return Vector2(i, j)
+		return Vector2(1,1)
+			
 		
 
 const directions = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
