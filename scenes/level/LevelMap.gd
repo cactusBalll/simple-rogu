@@ -43,7 +43,7 @@ class MapOfMap:
 	func get_random_empty() -> Vector2:
 		for i in range(20): # num tries
 			var t = randi() % map.size()
-			if map[t] == 0:
+			if map[t] == 1:
 				return Vector2(t % map_size, t / map_size)
 		for i in range(map_size):
 			for j in range(map_size):
@@ -194,7 +194,7 @@ func connectRegions():
 			for region in connectorRegions[pos]:
 				if not merged[region] in regions1:
 					regions1.append(region)
-			if regions.size() > 1: continue
+			if regions1.size() > 1: continue
 			if randi() % extraConnectoreChance == 0: 
 				addJunction(pos)
 			toRemove.append(pos)

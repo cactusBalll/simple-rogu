@@ -9,13 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "Damage",
+"language": "GDScript",
+"path": "res://scripts/Damage.gd"
+}, {
 "base": "EditorVCSInterface",
 "class": "GitAPI",
 "language": "NativeScript",
 "path": "res://addons/godot-git-plugin/git_api.gdns"
+}, {
+"base": "KinematicBody2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://scenes/level/Player.gd"
 } ]
 _global_script_class_icons={
-"GitAPI": ""
+"Damage": "",
+"GitAPI": "",
+"Player": ""
 }
 
 [application]
@@ -23,6 +35,10 @@ _global_script_class_icons={
 config/name="Fk Simple Rogu"
 run/main_scene="res://scenes/level/level.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Config="*res://scenes/config.gd"
 
 [editor]
 
@@ -70,4 +86,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+environment/default_clear_color=Color( 0.0901961, 0.0156863, 0.176471, 1 )
 environment/default_environment="res://default_env.tres"
