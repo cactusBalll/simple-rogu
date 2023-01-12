@@ -10,7 +10,7 @@ tool
 extends EditorPlugin
 
 func _enter_tree():
-    add_custom_type("VirtualJoystick", "Area2D", preload("VirtualJoystick.gd"), preload("icon.png"))
+	add_custom_type("VirtualJoystick", "Area2D", preload("VirtualJoystick.gd"), preload("icon.png"))
 
 func _exit_tree():
-    remove_custom_type("Joystick")
+	remove_custom_type("Joystick")

@@ -7,17 +7,27 @@ class_name Player
 #export var speed_scale = 100
 var Bullet = preload("res://scenes/castspells/PlayerBullet.tscn")
 onready var level := $".."
-
+onready var buff_timer := $BuffTimer
+onready var vjoy_move_ctrl := $"../UILayer/VirtualJoystick"
 onready var speed_scale = Config.speed_scale
 var speed = 5
+export(float) var defend = 0.0
+export(bool) var joystick = true
+var hp = 100.0
+var max_hp = 100.0
+var freezed = false
 var velocity: Vector2 = Vector2(0,0)
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	buff_timer.connect("timeout", self, "defreeze")
+	vjoy_move_ctrl.connect("controlling",self,"vjoystick_move")
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if freezed or joystick:
+		return
 	velocity = Vector2(0,0)
 	if Input.is_action_pressed("ui_up"):
 		velocity += Vector2(0,-1)
@@ -27,7 +37,10 @@ func _process(delta):
 		velocity += Vector2(1,0) 
 	if Input.is_action_pressed("ui_down"):
 		velocity += Vector2(0,1)
-		
+
+func vjoystick_move(v: Vector2):
+	if joystick:
+		velocity = v.normalized()
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
@@ -47,3 +60,15 @@ func _input(event):
 func _physics_process(delta):
 	move_and_collide(velocity.normalized() * speed_scale * delta * speed)
 	pass
+
+# since we implement duck type, there's no explicit interface
+# but every mob should implement this method
+func attacked(damage: Damage):
+	var val = damage.value - defend * (1 - damage.amp)
+	hp -= val
+	if damage.freeze > 0:
+		buff_timer.start(damage.freeze)
+	pass
+	
+func defreeze():
+	freezed = false
