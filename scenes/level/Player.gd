@@ -8,7 +8,9 @@ class_name Player
 var Bullet = preload("res://scenes/castspells/PlayerBullet.tscn")
 onready var level := $".."
 onready var buff_timer := $BuffTimer
+onready var atkcd_timer := $AtkCD
 onready var vjoy_move_ctrl := $"../UILayer/VirtualJoystick"
+onready var vjoy_atk_ctrl := $"../UILayer/VJoyStickR"
 onready var speed_scale = Config.speed_scale
 var speed = 5
 export(float) var defend = 0.0
@@ -17,10 +19,20 @@ var hp = 100.0
 var max_hp = 100.0
 var freezed = false
 var velocity: Vector2 = Vector2(0,0)
+
+
+
+export(float) var atk_cd = 1.0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	atkcd_timer.wait_time = atk_cd
+	atkcd_timer.connect("timeout",self, "perform_attack")
 	buff_timer.connect("timeout", self, "defreeze")
 	vjoy_move_ctrl.connect("controlling",self,"vjoystick_move")
+	vjoy_move_ctrl.connect("released", self, "vjoystick_halt")
+	vjoy_atk_ctrl.connect("trimming", self, "vjoystick_attack")
+	vjoy_atk_ctrl.connect("released", self, "vjoystick_attack_halt")
 	pass # Replace with function body.
 
 
@@ -41,7 +53,29 @@ func _process(delta):
 func vjoystick_move(v: Vector2):
 	if joystick:
 		velocity = v.normalized()
-func _input(event):
+		
+func vjoystick_halt():
+	velocity = Vector2.ZERO
+
+var atk_vec = null
+
+func vjoystick_attack(v: Vector2):
+	atk_vec = v
+
+func vjoystick_attack_halt():
+	atk_vec = null
+
+func perform_attack():
+	if atk_vec != null:
+		var b = Bullet.instance()
+		b.velocity = atk_vec.normalized()
+		b.position = position + atk_vec.normalized() * speed * 5
+		#print(b.position)
+		level.add_child(b)
+
+func _unhandled_input(event):
+	if freezed or joystick:
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			#print(get_viewport().get_mouse_position())

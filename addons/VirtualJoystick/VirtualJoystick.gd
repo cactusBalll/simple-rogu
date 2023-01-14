@@ -68,11 +68,13 @@ func _input(event):
 func _input_event(viewport, event, shape_idx):
 	if not (event is InputEventScreenDrag) and not (event is InputEventScreenTouch):
 		return
-
+	
 	current_event = event
-
+	
+	
 	if event is InputEventScreenTouch:
 		is_dragging = event.pressed
+		get_tree().set_input_as_handled()
 		if not is_dragging:
 			is_trimming = false
 			button.global_position = container.global_position
@@ -80,7 +82,7 @@ func _input_event(viewport, event, shape_idx):
 			angle = 0.0
 
 			emit_signal("released")
-
+	
 	_process_button()
 
 func _process_button():
