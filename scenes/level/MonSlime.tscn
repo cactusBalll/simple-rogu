@@ -26,3 +26,5 @@ shape = SubResource( 1 )
 wait_time = 5.0
 autostart = true
 script = ExtResource( 3 )
+
+[node name="FreezeTimer" type="Timer" parent="."]

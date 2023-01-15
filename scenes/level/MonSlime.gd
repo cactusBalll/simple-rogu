@@ -13,14 +13,20 @@ export var speed = 2
 onready var timer = $AITimer
 var player: Player = null # should be init by caller
 export var chasing_range = 100 # might be modified
+export var damage = 10
+export var defend = 0.0
+export var hp = 10
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	timer.connect("timeout", self, "idle_change_direction")
+	freeze_timer.connect("timeout", self, "defreeze")
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if hp <= 0:
+		queue_free()
 	pass
 func idle_change_direction():
 	idle_velocity = directions[randi() % 4]
@@ -30,8 +36,29 @@ func _physics_process(delta):
 		state = State.Chasing
 	else:
 		state = State.Idle
+	if freezed:
+		return
+	var collider_info
 	if state == State.Idle:
-		move_and_collide(idle_velocity * speed_scale * speed * delta)
+		collider_info = move_and_collide(idle_velocity * speed_scale * speed * delta)
 	elif state == State.Chasing:
 		var velocity = (player.position - position).normalized()
-		move_and_collide(velocity * speed_scale * speed * delta)
+		collider_info = move_and_collide(velocity * speed_scale * speed * delta)
+	if collider_info != null and collider_info.collider.has_method("attacked"):
+		var d = Damage.new(damage, 0.0, 0.0)
+		var collider = collider_info.collider
+		collider.attacked(d)
+		queue_free()
+
+onready var freeze_timer := $FreezeTimer	
+var freezed = false
+func attacked(damage: Damage):
+	var val = damage.value - defend * (1 - damage.amp)
+	hp -= val
+	if damage.freeze > 0:
+		freezed = true
+		freeze_timer.start(damage.freeze)
+	pass
+
+func defreeze():
+	freezed = false

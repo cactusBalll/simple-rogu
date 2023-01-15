@@ -57,6 +57,8 @@ enabled=PoolStringArray( "res://addons/VirtualJoystick/plugin.cfg" )
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
+theme/custom="res://assets/themes/Classic311/Classic311.tres"
+theme/custom_font="res://assets/fonts/SHSerifC.tres"
 
 [input]
 

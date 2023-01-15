@@ -16,8 +16,11 @@ func _ready():
 	pass # Replace with function body.
 
 func _physics_process(delta):
-	var collide := move_and_collide(delta * speed_scale * speed * velocity)
-	if collide != null:
+	var collide_info := move_and_collide(delta * speed_scale * speed * velocity)
+	if collide_info != null:
+		var collider := collide_info.collider
+		if collider.has_method("attacked"):
+			collider.attacked(get_damage())
 		queue_free()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
