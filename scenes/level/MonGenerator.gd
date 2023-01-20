@@ -35,6 +35,7 @@ func gen_monster():
 	if is_gen_slime:
 		var pos = get_random_pos()
 		var sl = slime.instance()
+		sl.add_to_group("enemy")
 		sl.player = player
 		sl.position = pos
 		level.add_child(sl)

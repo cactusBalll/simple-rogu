@@ -1,6 +1,9 @@
 extends Node
 
 
-export var speed_scale = 70
-
-
+var speed_scale = 70
+var heal_time = 5.0
+var major_version = 0
+var minor_version = 0
+var patch = 0
+var score_scale = 10

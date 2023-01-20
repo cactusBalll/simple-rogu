@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://assets/Tiles/35.png" type="Texture" id=1]
 [ext_resource path="res://assets/Tiles/1.png" type="Texture" id=2]
@@ -7,7 +7,7 @@
 [ext_resource path="res://scenes/level/level.gd" type="Script" id=5]
 [ext_resource path="res://scenes/level/LevelMap.gd" type="Script" id=6]
 [ext_resource path="res://scenes/level/Player.gd" type="Script" id=7]
-[ext_resource path="res://assets/light.png" type="Texture" id=8]
+[ext_resource path="res://scenes/widgets/SimpleLight.tscn" type="PackedScene" id=8]
 [ext_resource path="res://assets/Tiles/10.png" type="Texture" id=9]
 [ext_resource path="res://scenes/level/MonGenerator.gd" type="Script" id=10]
 [ext_resource path="res://addons/VirtualJoystick/VirtualJoystick.gd" type="Script" id=11]
@@ -16,6 +16,12 @@
 [ext_resource path="res://assets/valuebar/bar.png" type="Texture" id=14]
 [ext_resource path="res://assets/valuebar/liquid.png" type="Texture" id=15]
 [ext_resource path="res://scenes/level/HpBar.gd" type="Script" id=16]
+[ext_resource path="res://scenes/level/HpValue.gd" type="Script" id=17]
+[ext_resource path="res://scenes/level/regenerate.gd" type="Script" id=18]
+[ext_resource path="res://assets/fonts/SourceHanSerifSC-VF.otf" type="DynamicFontData" id=19]
+[ext_resource path="res://assets/Tiles/32.png" type="Texture" id=20]
+[ext_resource path="res://scenes/level/gotoPortal.gd" type="Script" id=21]
+[ext_resource path="res://scenes/level/playerPos.gd" type="Script" id=22]
 
 [sub_resource type="CanvasItemMaterial" id=7]
 light_mode = 2
@@ -30,6 +36,12 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
+points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[sub_resource type="OccluderPolygon2D" id=11]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[sub_resource type="ConvexPolygonShape2D" id=12]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 
 [sub_resource type="TileSet" id=1]
@@ -105,6 +117,28 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 3/z_index = 0
+4/name = "32.png 4"
+4/texture = ExtResource( 20 )
+4/tex_offset = Vector2( 0, 0 )
+4/modulate = Color( 1, 1, 1, 1 )
+4/region = Rect2( 0, 0, 32, 32 )
+4/tile_mode = 0
+4/occluder_offset = Vector2( 0, 0 )
+4/occluder = SubResource( 11 )
+4/navigation_offset = Vector2( 0, 0 )
+4/shape_offset = Vector2( 0, 0 )
+4/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+4/shape = SubResource( 12 )
+4/shape_one_way = false
+4/shape_one_way_margin = 1.0
+4/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 12 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+4/z_index = 0
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 7.0
@@ -112,6 +146,10 @@ radius = 7.0
 [sub_resource type="CircleShape2D" id=8]
 
 [sub_resource type="CircleShape2D" id=9]
+
+[sub_resource type="DynamicFont" id=10]
+size = 32
+font_data = ExtResource( 19 )
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 5 )
@@ -128,7 +166,7 @@ format = 1
 script = ExtResource( 6 )
 
 [node name="Player" type="KinematicBody2D" parent="."]
-collision_mask = 2
+collision_mask = 66
 script = ExtResource( 7 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
@@ -141,12 +179,7 @@ texture = ExtResource( 4 )
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
 
-[node name="Light2D" type="Light2D" parent="Player"]
-texture = ExtResource( 8 )
-mode = 2
-shadow_enabled = true
-shadow_filter = 1
-shadow_filter_smooth = 30.5
+[node name="Light2D" parent="Player" instance=ExtResource( 8 )]
 
 [node name="BuffTimer" type="Timer" parent="Player"]
 one_shot = true
@@ -186,13 +219,92 @@ button_texture = ExtResource( 13 )
 scale = Vector2( 5, 5 )
 shape = SubResource( 9 )
 
+[node name="ScoreBoard" type="Label" parent="UILayer"]
+margin_left = 400.0
+margin_top = 59.0
+margin_right = 610.0
+margin_bottom = 90.0
+custom_colors/font_color = Color( 0.196078, 0.623529, 0.839216, 1 )
+
 [node name="HpBar" type="TextureProgress" parent="UILayer"]
 margin_left = 42.0
 margin_top = -27.0
 margin_right = 89.0
 margin_bottom = 5.0
 rect_scale = Vector2( 7, 6 )
-value = 50.0
 texture_under = ExtResource( 14 )
 texture_progress = ExtResource( 15 )
 script = ExtResource( 16 )
+
+[node name="HpValue" type="Label" parent="UILayer"]
+margin_left = 288.0
+margin_top = 60.0
+margin_right = 328.0
+margin_bottom = 84.0
+input_pass_on_modal_close_click = false
+custom_colors/font_color = Color( 0.211765, 0.819608, 0.137255, 1 )
+text = "Text
+"
+script = ExtResource( 17 )
+
+[node name="LoadingPopup" type="Panel" parent="UILayer"]
+margin_left = 136.0
+margin_top = 129.0
+margin_right = 887.0
+margin_bottom = 476.0
+
+[node name="LoadingPopup" type="Label" parent="UILayer/LoadingPopup"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 751.0
+margin_bottom = 342.0
+custom_colors/font_color = Color( 0.898039, 0.454902, 0.454902, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "加载中。。。"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="DeveloperMenu" type="PanelContainer" parent="UILayer"]
+margin_left = 801.0
+margin_top = 25.0
+margin_right = 1008.0
+margin_bottom = 210.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/DeveloperMenu"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 200.0
+margin_bottom = 178.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="regenerate" type="Button" parent="UILayer/DeveloperMenu/VBoxContainer"]
+margin_right = 193.0
+margin_bottom = 32.0
+text = "regenerate"
+script = ExtResource( 18 )
+
+[node name="playerPos" type="Label" parent="UILayer/DeveloperMenu/VBoxContainer"]
+margin_top = 36.0
+margin_right = 193.0
+margin_bottom = 60.0
+script = ExtResource( 22 )
+
+[node name="portalPos" type="Label" parent="UILayer/DeveloperMenu/VBoxContainer"]
+margin_top = 64.0
+margin_right = 193.0
+margin_bottom = 88.0
+
+[node name="gotoPortal" type="Button" parent="UILayer/DeveloperMenu/VBoxContainer"]
+margin_top = 92.0
+margin_right = 193.0
+margin_bottom = 124.0
+text = "goto portal"
+script = ExtResource( 21 )

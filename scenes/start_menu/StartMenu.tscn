@@ -1,4 +1,9 @@
-[gd_scene format=2]
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/start_menu/BeginButton.gd" type="Script" id=1]
+[ext_resource path="res://scenes/start_menu/DifficultyOptions.gd" type="Script" id=2]
+[ext_resource path="res://scenes/start_menu/Version.gd" type="Script" id=3]
+[ext_resource path="res://scenes/start_menu/StarterPackOption.gd" type="Script" id=4]
 
 [node name="StartMenu" type="PanelContainer"]
 margin_left = 273.0
@@ -12,7 +17,68 @@ margin_top = 7.0
 margin_right = 497.0
 margin_bottom = 221.0
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="BeginButton" type="Button" parent="VBoxContainer"]
 margin_right = 490.0
-margin_bottom = 30.0
+margin_bottom = 32.0
 text = "开始"
+script = ExtResource( 1 )
+
+[node name="Label0" type="Label" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 490.0
+margin_bottom = 60.0
+text = "难度"
+align = 1
+valign = 1
+
+[node name="DifficultyOptions" type="OptionButton" parent="VBoxContainer"]
+margin_top = 64.0
+margin_right = 490.0
+margin_bottom = 96.0
+text = "普通"
+align = 1
+items = [ "普通", null, false, 0, null, "困难", null, false, 1, null ]
+selected = 0
+script = ExtResource( 2 )
+
+[node name="Label1" type="Label" parent="VBoxContainer"]
+margin_top = 100.0
+margin_right = 490.0
+margin_bottom = 124.0
+text = "初始角色"
+align = 1
+valign = 1
+
+[node name="StarterPackOption" type="OptionButton" parent="VBoxContainer"]
+margin_top = 128.0
+margin_right = 490.0
+margin_bottom = 160.0
+text = "更高生命，自动回复"
+items = [ "更高生命，自动回复", null, false, 0, null, "低生命，近距离射击", null, false, 1, null ]
+selected = 0
+script = ExtResource( 4 )
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 164.0
+margin_right = 490.0
+margin_bottom = 168.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 172.0
+margin_right = 490.0
+margin_bottom = 204.0
+alignment = 2
+
+[node name="about" type="ToolButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 431.0
+margin_right = 486.0
+margin_bottom = 32.0
+text = "关于..."
+expand_icon = true
+
+[node name="Version" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_left = 490.0
+margin_top = 4.0
+margin_right = 490.0
+margin_bottom = 28.0
+script = ExtResource( 3 )

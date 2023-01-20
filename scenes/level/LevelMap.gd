@@ -9,17 +9,26 @@ const bound = Rect2(0, 0, map_size, map_size)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	generate_level()
+
+# 这个方法使用的地牢生成算法时间复杂度略高，显示一个加载界面，这咋实现
+onready var loadingPopUp := $"../UILayer/LoadingPopup"
+func generate_level():
+	#loadingPopUp.show()
+	
+	#get_tree().create_timer(1.0).connect("timeout", loadingPopUp, "hide")
 	randomize()
+	clear_gen()
 	generate()
+	clear()
 	for i in range(map_size):
 		for j in range(map_size):
 			if mapp.get_xy(i,j) == 0:
 				set_cell(i,j, 3)
 			elif mapp.get_xy(i,j) == 1:
 				set_cell(i,j, 0)
-	pass # Replace with function body.
-
-
+	loadingPopUp.hide()
+	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
@@ -44,11 +53,16 @@ class MapOfMap:
 		for i in range(20): # num tries
 			var t = randi() % map.size()
 			if map[t] == 1:
-				return Vector2(t % map_size, t / map_size)
+				var v = Vector2(t % map_size, t / map_size)
+				#print(get_xyv(v))
+				#if get_xyv(v) != 1:
+				#	breakpoint
+				return v
 		for i in range(map_size):
 			for j in range(map_size):
 				if self.get_xy(i, j) == 1:
 					return Vector2(i, j)
+		
 		return Vector2(1,1)
 			
 		
@@ -64,6 +78,11 @@ onready var regions := MapOfMap.new()
 onready var currentRegion := -1
 onready var mapp = MapOfMap.new()
 
+func clear_gen():
+	rooms = []
+	regions = MapOfMap.new()
+	currentRegion = -1
+	mapp = MapOfMap.new()
 func generate():
 	addRooms()
 	
@@ -161,6 +180,8 @@ func connectRegions():
 		openRegions.append(i)
 		
 	while openRegions.size() > 1:
+		if connectors.empty():
+			break # 我不知道为啥这里会为空，原始算法也没看懂
 		connectors.shuffle()
 		var connector = connectors[0]
 		

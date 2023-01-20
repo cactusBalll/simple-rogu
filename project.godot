@@ -23,22 +23,29 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://scenes/level/Player.gd"
+}, {
+"base": "Node",
+"class": "Weapons",
+"language": "GDScript",
+"path": "res://scripts/Weapons.gd"
 } ]
 _global_script_class_icons={
 "Damage": "",
 "GitAPI": "",
-"Player": ""
+"Player": "",
+"Weapons": ""
 }
 
 [application]
 
 config/name="Fk Simple Rogu"
-run/main_scene="res://scenes/level/level.tscn"
+run/main_scene="res://scenes/start_menu/StartMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 Config="*res://scenes/config.gd"
+GlobalState="*res://scripts/GlobalState.gd"
 
 [display]
 

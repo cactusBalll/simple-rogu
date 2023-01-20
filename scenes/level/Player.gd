@@ -26,8 +26,13 @@ var velocity: Vector2 = Vector2(0,0)
 
 
 
-export(float) var atk_cd = 1.0
+export(float) var atk_cd = 0.5
+var weapon = null
 
+
+
+
+var auto_heal = 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	atkcd_timer.wait_time = atk_cd
@@ -37,6 +42,14 @@ func _ready():
 	vjoy_move_ctrl.connect("released", self, "vjoystick_halt")
 	vjoy_atk_ctrl.connect("trimming", self, "vjoystick_attack")
 	vjoy_atk_ctrl.connect("released", self, "vjoystick_attack_halt")
+	GlobalState.config_player(self)
+	
+	if auto_heal > 0.0:
+		var timer := Timer.new()
+		timer.autostart = true
+		timer.wait_time = Config.heal_time
+		timer.connect("timeout", self, "heal")
+		self.add_child(timer)
 	
 	emit_signal("hp_changed", hp, max_hp)
 	pass # Replace with function body.
@@ -73,11 +86,16 @@ func vjoystick_attack_halt():
 
 func perform_attack():
 	if atk_vec != null:
-		var b = Bullet.instance()
-		b.velocity = atk_vec.normalized()
-		b.position = position + atk_vec.normalized() * speed * 5
-		#print(b.position)
-		level.add_child(b)
+		for i in range(weapon.num):
+			var b = Bullet.instance()
+			var angle = atk_vec.normalized().angle() 
+			var angle_u = angle + weapon.distribution / 2.0
+			var angle_l = angle - weapon.distribution / 2.0
+			b.velocity =  Vector2(1,0).rotated(angle_l + randf() * weapon.distribution)
+			b.position = position + b.velocity * speed * 5
+			b.config_bullet_with(weapon)
+			#print(b.position)
+			level.add_child(b)
 
 func _unhandled_input(event):
 	if freezed or joystick:
@@ -114,3 +132,11 @@ func attacked(damage: Damage):
 	
 func defreeze():
 	freezed = false
+	
+func heal():
+	hp += auto_heal
+	emit_signal("hp_changed", hp, max_hp)
+
+func weapon_equip(weapon):
+	atk_cd = weapon.cd
+	self.weapon = weapon
