@@ -8,6 +8,7 @@ var starter = 0
 func config_player_0(player):
 	player.hp = 125.0
 	player.max_hp = 125.0
+	player.auto_heal = 2.0
 	player.weapon_equip(Weapons.WSpark1.new())
 	
 func config_player_1(player):
@@ -23,6 +24,11 @@ func config_player(player):
 		1:
 			config_player_1(player)
 
-
+func reset():
+	score = 0
+	level = 1
+	difficulty = 0
+	starter = 0
+	
 var score = 0
 var level = 1

@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/start_menu/BeginButton.gd" type="Script" id=1]
 [ext_resource path="res://scenes/start_menu/DifficultyOptions.gd" type="Script" id=2]
 [ext_resource path="res://scenes/start_menu/Version.gd" type="Script" id=3]
 [ext_resource path="res://scenes/start_menu/StarterPackOption.gd" type="Script" id=4]
+[ext_resource path="res://scenes/start_menu/dev.gd" type="Script" id=5]
+[ext_resource path="res://scenes/start_menu/about.gd" type="Script" id=6]
 
 [node name="StartMenu" type="PanelContainer"]
 margin_left = 273.0
@@ -69,12 +71,21 @@ margin_right = 490.0
 margin_bottom = 204.0
 alignment = 2
 
+[node name="dev" type="CheckButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 308.0
+margin_right = 427.0
+margin_bottom = 32.0
+text = "开发模式"
+script = ExtResource( 5 )
+
 [node name="about" type="ToolButton" parent="VBoxContainer/HBoxContainer"]
 margin_left = 431.0
 margin_right = 486.0
 margin_bottom = 32.0
+custom_colors/font_color = Color( 0.121569, 0.737255, 0.509804, 1 )
 text = "关于..."
 expand_icon = true
+script = ExtResource( 6 )
 
 [node name="Version" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_left = 490.0

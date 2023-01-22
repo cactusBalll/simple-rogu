@@ -11,6 +11,8 @@ func _ready():
 	regenerate_level()
 	$UILayer/HpBar.max_value = $Player.max_hp
 	$UILayer/HpBar.value = $Player.hp
+	$Player.connect("hp_changed", self, "game_over")
+	$UILayer/DeveloperMenu.visible = Config.developer_mode
 	
 	pass # Replace with function body.
 func _process(delta):
@@ -31,7 +33,7 @@ func regenerate_level():
 	var portal = preload("res://scenes/objekts/portal.tscn").instance()
 	portal.position = pos
 	$UILayer/DeveloperMenu/VBoxContainer/gotoPortal.portal_pos = pos
-	$UILayer/DeveloperMenu/VBoxContainer/portalPos.text = "portal: {0}".format({0:pos})
+	$UILayer/DeveloperMenu/VBoxContainer/portalPos.text = "portal: %.1f,%.1f"%[pos.x, pos.y]
 	add_child(portal)
 	cportal = portal
 	
@@ -45,3 +47,9 @@ func go_next_level():
 	$UILayer/LoadingPopup.show()
 	get_tree().create_timer(0.3).connect("timeout", self, "regenerate_level")
 	#regenerate_level()
+
+
+func game_over(hp, max_hp):
+	if hp <= 0.0:
+		get_tree().change_scene("res://scenes/gg_menu/GGMenu.tscn")
+	

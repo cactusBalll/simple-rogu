@@ -135,6 +135,7 @@ func defreeze():
 	
 func heal():
 	hp += auto_heal
+	hp = clamp(hp, 0, max_hp)
 	emit_signal("hp_changed", hp, max_hp)
 
 func weapon_equip(weapon):

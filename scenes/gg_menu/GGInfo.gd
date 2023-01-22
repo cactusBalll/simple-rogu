@@ -10,6 +10,7 @@ const info = [
 	"寄",
 	"蔡",
 	"那么战败CG什么的有在做吗",
+	"想啊，很想啊"
 ]
 
 # Called when the node enters the scene tree for the first time.

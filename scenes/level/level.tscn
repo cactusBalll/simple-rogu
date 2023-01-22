@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://assets/Tiles/35.png" type="Texture" id=1]
 [ext_resource path="res://assets/Tiles/1.png" type="Texture" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://assets/Tiles/32.png" type="Texture" id=20]
 [ext_resource path="res://scenes/level/gotoPortal.gd" type="Script" id=21]
 [ext_resource path="res://scenes/level/playerPos.gd" type="Script" id=22]
+[ext_resource path="res://scenes/level/dead.gd" type="Script" id=23]
 
 [sub_resource type="CanvasItemMaterial" id=7]
 light_mode = 2
@@ -308,3 +309,10 @@ margin_right = 193.0
 margin_bottom = 124.0
 text = "goto portal"
 script = ExtResource( 21 )
+
+[node name="dead" type="Button" parent="UILayer/DeveloperMenu/VBoxContainer"]
+margin_top = 128.0
+margin_right = 193.0
+margin_bottom = 160.0
+text = "suicide"
+script = ExtResource( 23 )

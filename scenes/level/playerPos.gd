@@ -11,7 +11,7 @@ func _ready():
 	pass # Replace with function body.
 onready var player := $"../../../../Player"
 func _process(delta):
-	text = "player: {0}".format({0:player.position})
+	text = "player: %.1f,%.1f" % [player.position.x, player.position.y]
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

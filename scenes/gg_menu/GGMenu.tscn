@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/gg_menu/GGInfo.gd" type="Script" id=1]
+[ext_resource path="res://scenes/gg_menu/BackToMain.gd" type="Script" id=2]
+[ext_resource path="res://scenes/gg_menu/Score.gd" type="Script" id=3]
 
 [node name="PanelContainer" type="PanelContainer"]
 margin_left = 322.0
@@ -15,21 +17,29 @@ margin_right = 419.0
 margin_bottom = 222.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 160.0
-margin_top = 78.0
-margin_right = 252.0
-margin_bottom = 136.0
+margin_left = 162.0
+margin_top = 63.0
+margin_right = 250.0
+margin_bottom = 151.0
+
+[node name="Score" type="Label" parent="CenterContainer/VBoxContainer"]
+margin_right = 88.0
+margin_bottom = 24.0
+custom_colors/font_color = Color( 0.2, 0.917647, 0.976471, 1 )
+script = ExtResource( 3 )
 
 [node name="GGInfo" type="Label" parent="CenterContainer/VBoxContainer"]
-margin_right = 92.0
-margin_bottom = 24.0
+margin_top = 28.0
+margin_right = 88.0
+margin_bottom = 52.0
 custom_colors/font_color = Color( 1, 0.72549, 0.705882, 1 )
 align = 1
 valign = 1
 script = ExtResource( 1 )
 
-[node name="Button" type="Button" parent="CenterContainer/VBoxContainer"]
-margin_top = 28.0
-margin_right = 92.0
-margin_bottom = 58.0
+[node name="BackToMain" type="Button" parent="CenterContainer/VBoxContainer"]
+margin_top = 56.0
+margin_right = 88.0
+margin_bottom = 88.0
 text = "回到主界面"
+script = ExtResource( 2 )
