@@ -30,5 +30,10 @@ func reset():
 	difficulty = 0
 	starter = 0
 	
+	#map_size = 55
+	
 var score = 0
 var level = 1
+
+
+#var map_size = 55

@@ -4,7 +4,7 @@ extends TileMap
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-const map_size = 105
+const map_size = 55
 const bound = Rect2(0, 0, map_size, map_size)
 
 # Called when the node enters the scene tree for the first time.
@@ -64,8 +64,9 @@ class MapOfMap:
 					return Vector2(i, j)
 		
 		return Vector2(1,1)
-			
-		
+	
+func get_random_empty_global_pos() -> Vector2:
+		return to_global(map_to_world(mapp.get_random_empty()))			
 
 const directions = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 const numRoomTries = 40

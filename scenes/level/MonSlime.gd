@@ -16,6 +16,7 @@ export var chasing_range = 100 # might be modified
 export var damage = 10
 export var defend = 0.0
 export var hp = 10
+var gen_power = 1 # 生成权重
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	timer.connect("timeout", self, "idle_change_direction")
@@ -26,6 +27,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if hp <= 0:
+		LevelState.current_monster_density -= gen_power
 		queue_free()
 	pass
 func idle_change_direction():

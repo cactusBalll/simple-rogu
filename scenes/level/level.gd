@@ -41,6 +41,7 @@ func regenerate_level():
 func go_next_level():
 	GlobalState.score += GlobalState.level * Config.score_scale
 	GlobalState.level += 1
+	LevelState.reset()
 	for e in get_tree().get_nodes_in_group("enemy"):
 		e.queue_free()
 	cportal.queue_free()
