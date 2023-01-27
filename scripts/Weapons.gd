@@ -79,3 +79,12 @@ class WShock1:
 	var distance = 100
 	func on_bullet_generated(bullet: Node2D):
 		pass
+
+# 简单装备类
+class SimpleBuff:
+	func equip_on(player):
+		pass
+	func equip_off(player):
+		pass
+
+

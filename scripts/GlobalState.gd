@@ -35,5 +35,6 @@ func reset():
 var score = 0
 var level = 1
 
-
+func add_score(n: int):
+	score += n
 #var map_size = 55

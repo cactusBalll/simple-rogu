@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-
+signal hp_changed(hp, max_hp)
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -16,11 +16,16 @@ export var chasing_range = 100 # might be modified
 export var damage = 10
 export var defend = 0.0
 export var hp = 10
+export var max_hp = 10
 var gen_power = 1 # 生成权重
+var score = 1
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	timer.connect("timeout", self, "idle_change_direction")
 	freeze_timer.connect("timeout", self, "defreeze")
+	self.connect("hp_changed", self, "on_change_hp_bar")
+	$HpBar.value = hp
+	$HpBar.max_value = max_hp
 	pass # Replace with function body.
 
 
@@ -28,6 +33,7 @@ func _ready():
 func _process(delta):
 	if hp <= 0:
 		LevelState.current_monster_density -= gen_power
+		GlobalState.add_score(GlobalState.level * score)
 		queue_free()
 	pass
 func idle_change_direction():
@@ -57,6 +63,7 @@ var freezed = false
 func attacked(damage: Damage):
 	var val = damage.value - defend * (1 - damage.amp)
 	hp -= val
+	emit_signal("hp_changed", hp, max_hp)
 	if damage.freeze > 0:
 		freezed = true
 		freeze_timer.start(damage.freeze)
@@ -64,3 +71,8 @@ func attacked(damage: Damage):
 
 func defreeze():
 	freezed = false
+
+
+func on_change_hp_bar(hp, max_hp):
+	$HpBar.value = hp
+	$HpBar.max_value = max_hp
