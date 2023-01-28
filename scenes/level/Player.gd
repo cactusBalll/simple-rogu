@@ -146,6 +146,8 @@ func _physics_process(delta):
 # but every mob should implement this method
 func attacked(damage: Damage):
 	var val = damage.value - defend * (1 - damage.amp)
+	if invincible:
+		val = 0
 	hp -= val
 	if damage.freeze > 0:
 		freezed = true
@@ -156,12 +158,12 @@ func attacked(damage: Damage):
 func activate_invincible():
 	invincible = true
 	invincible_timer.start(Config.invincible_time)
-	
+	$"../UILayer/HpBar".modulate = Color.gold
 func defreeze():
 	freezed = false
 func deinvincible():
 	invincible = false
-	
+	$"../UILayer/HpBar".modulate = Color(1,1,1,1)
 func heal():
 	hp += auto_heal
 	hp = clamp(hp, 0, max_hp)

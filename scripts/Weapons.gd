@@ -200,17 +200,48 @@ class BfAutoHeal:
 # 主动技能
 
 static func get_rand_skill():
-	match randi() % 1:
-		0:
+	var l = randi() % GlobalState.level + 1
+	match randi() % 10:
+		0,1,2,3:
 			return SkTorch.new()
+		4,5,6,7:
+			return SkHeal.new(l * 20.0)
+		9,9:
+			return SkInvincible.new()
 class SkTorch:
-	var cd = 30.0
+	var cd = 20.0
 	func on_trig(player):
 		var torch = preload("res://scenes/objekts/Torch.tscn").instance()
 		torch.position = player.position
 		player.get_parent().add_child(torch)
 	func get_description():
 		return "火把"
+	func equip_on(player):
+		pass
+	func equip_off(player):
+		pass
+
+class SkHeal:
+	var value = 20.0
+	var cd = 15.0
+	func _init(value):
+		self.value = value
+	func on_trig(player):
+		player.hp = clamp(player.hp + value, 0, player.max_hp)
+		player.emit_signal("hp_changed", player.hp, player.max_hp)
+	func get_description():
+		return "治疗术+%.0f"%value
+	func equip_on(player):
+		pass
+	func equip_off(player):
+		pass
+
+class SkInvincible:
+	var cd = 60.0
+	func on_trig(player):
+		player.activate_invincible()
+	func get_description():
+		return "无敌1s"
 	func equip_on(player):
 		pass
 	func equip_off(player):
