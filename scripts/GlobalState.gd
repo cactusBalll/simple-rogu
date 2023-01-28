@@ -3,13 +3,14 @@ extends Node
 
 var difficulty = 0
 var starter = 0
-
+var player
 
 func config_player_0(player):
-	player.hp = 125.0
-	player.max_hp = 125.0
-	player.auto_heal = 2.0
+	player.hp = 100.0
+	player.max_hp = 100.0
+	player.auto_heal = 1.0
 	player.weapon_equip(Weapons.WSpark1.new())
+	#player.skill_equip(Weapons.SkTorch.new())
 	
 func config_player_1(player):
 	player.hp = 50.0

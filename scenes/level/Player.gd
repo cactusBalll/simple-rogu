@@ -20,8 +20,13 @@ signal hp_changed(hp, max_hp)
 var hp = 100.0
 var max_hp = 100.0
 
+var skill
+var skill_progress = 0.0
+var skill_cd = 1.0
 
 var freezed = false
+var invincible = false # 无敌
+var invincible_timer
 var velocity: Vector2 = Vector2(0,0)
 
 
@@ -43,21 +48,31 @@ func _ready():
 	vjoy_move_ctrl.connect("released", self, "vjoystick_halt")
 	vjoy_atk_ctrl.connect("trimming", self, "vjoystick_attack")
 	vjoy_atk_ctrl.connect("released", self, "vjoystick_attack_halt")
+	var btn = $"../UILayer/Skill"
+	btn.connect("pressed", self, "trig_skill")
 	GlobalState.config_player(self)
 	
-	if auto_heal > 0.0:
+	if true or auto_heal > 0.0:
 		var timer := Timer.new()
 		timer.autostart = true
 		timer.wait_time = Config.heal_time
 		timer.connect("timeout", self, "heal")
 		self.add_child(timer)
 	
+	invincible_timer = Timer.new()
+	invincible_timer.connect("timeout", self, "deinvincible")
+	self.add_child(invincible_timer)
+	
 	emit_signal("hp_changed", hp, max_hp)
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
+onready var skill_cd_bar = $"../UILayer/SkillCDBar"
 func _process(delta):
+	skill_progress = clamp(skill_progress + delta, 0, skill_cd)
+	skill_cd_bar.value = skill_progress
+	skill_cd_bar.max_value = skill_cd
 	if freezed or joystick:
 		return
 	velocity = Vector2(0,0)
@@ -86,6 +101,8 @@ func vjoystick_attack_halt():
 	atk_vec = null
 
 func perform_attack():
+	if freezed:
+		return 
 	if atk_vec != null:
 		for i in range(weapon.num):
 			var b = Bullet.instance()
@@ -119,7 +136,10 @@ func _unhandled_input(event):
 			
 	
 func _physics_process(delta):
-	move_and_collide(velocity.normalized() * speed_scale * delta * speed)
+	if freezed:
+		move_and_collide(Vector2.ZERO)
+	else:
+		move_and_collide(velocity.normalized() * speed_scale * delta * speed)
 	pass
 
 # since we implement duck type, there's no explicit interface
@@ -132,9 +152,15 @@ func attacked(damage: Damage):
 		buff_timer.start(damage.freeze)
 	emit_signal("hp_changed", hp, max_hp)
 	pass
+
+func activate_invincible():
+	invincible = true
+	invincible_timer.start(Config.invincible_time)
 	
 func defreeze():
 	freezed = false
+func deinvincible():
+	invincible = false
 	
 func heal():
 	hp += auto_heal
@@ -155,3 +181,24 @@ func buff_not_equip(buff):
 	buff.equip_off(self)
 	buffs.erase(buff)
 	emit_signal("hp_changed", hp, max_hp)
+
+
+func skill_equip(skill):
+	self.skill = skill
+	self.skill_cd = skill.cd
+	self.skill_progress = 0.0
+	skill.equip_on(self)
+	var btn = $"../UILayer/Skill"
+	btn.disabled = false
+	btn.text = skill.get_description()
+	pass
+func skill_not_equip(skill):
+	skill.equip_off(self)
+	var btn = $"../UILayer/Skill"
+	btn.disabled = true
+	btn.text = "主动技能"
+	pass
+func trig_skill():
+	if abs(skill_progress - skill_cd) < 1e-5:
+		skill.on_trig(self)
+		skill_progress = 0.0

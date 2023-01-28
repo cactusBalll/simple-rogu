@@ -13,7 +13,7 @@ func _ready():
 	$UILayer/HpBar.value = $Player.hp
 	$Player.connect("hp_changed", self, "game_over")
 	$UILayer/DeveloperMenu.visible = Config.developer_mode
-	
+	GlobalState.player = weakref($Player)
 	pass # Replace with function body.
 func _process(delta):
 	$UILayer/ScoreBoard.text = "{0}  level: {1}".format({0: GlobalState.score, 1: GlobalState.level})
@@ -42,13 +42,24 @@ func regenerate_level():
 	# 生成硬币
 	for i in range(20 + GlobalState.level * Config.coin_density):
 		gen_coin()
-	
+	for i in range(clamp(GlobalState.level/5, 1, 5)):
+		gen_chest()
 func gen_coin():
 	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
 	var coin = preload("res://scenes/objekts/Coin.tscn").instance()
 	coin.position = pos
 	add_child(coin)
 	pass
+
+func gen_chest():
+	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
+	print(pos)
+	var chest = preload("res://scenes/objekts/Chest.tscn").instance()
+	var sk = Weapons.get_rand_skill()
+	chest.containing = sk
+	chest.get_node("Panel/info").text = "是否将技能替换为" + sk.get_description()
+	chest.position = pos
+	add_child(chest)
 func go_next_level():
 	var upgrade_menu = preload("res://scenes/upgrade_menu/UpgradeMenu.tscn").instance()
 	$UILayer.add_child(upgrade_menu)

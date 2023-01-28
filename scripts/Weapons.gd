@@ -74,7 +74,7 @@ class WSpark3:
 		return null
 # 散射弹药
 class WShock1:
-	var value = 2.0
+	var value = 3.0
 	var freeze = 0.3
 	var amp = 0.0
 	var distribution = PI / 3.0
@@ -89,7 +89,7 @@ class WShock1:
 		return WShock2.new()
 
 class WShock2:
-	var value = 3.0
+	var value = 4.0
 	var freeze = 0.3
 	var amp = 0.0
 	var distribution = PI / 3.0
@@ -104,7 +104,7 @@ class WShock2:
 		return WShock3.new()
 
 class WShock3:
-	var value = 3.0
+	var value = 4.0
 	var freeze = 0.3
 	var amp = 0.0
 	var distribution = PI / 3.0
@@ -195,3 +195,23 @@ class BfAutoHeal:
 		return "每%.1f恢复%.0f生命值" % [Config.heal_time, value]
 	func get_cost():
 		return (value * 20) as int
+
+
+# 主动技能
+
+static func get_rand_skill():
+	match randi() % 1:
+		0:
+			return SkTorch.new()
+class SkTorch:
+	var cd = 30.0
+	func on_trig(player):
+		var torch = preload("res://scenes/objekts/Torch.tscn").instance()
+		torch.position = player.position
+		player.get_parent().add_child(torch)
+	func get_description():
+		return "火把"
+	func equip_on(player):
+		pass
+	func equip_off(player):
+		pass
