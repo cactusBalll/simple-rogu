@@ -39,11 +39,13 @@ class WSpark1:
 	var distance = INF
 	func on_bullet_generated(bullet: Node2D):
 		pass
+	func upgrade():
+		return WSpark2.new()
 class WSpark2:
 	var value = 7.0
 	var freeze = 0.0
 	var amp = 0.0
-	var distribution = PI / 6.0
+	var distribution = PI / 12.0
 	var num = 1
 	var cd = 0.4
 	var bullet_speed = 4.0
@@ -51,11 +53,13 @@ class WSpark2:
 	var distance = INF
 	func on_bullet_generated(bullet: Node2D):
 		pass
+	func upgrade():
+		return WSpark3.new()
 class WSpark3:
 	var value = 10.0
 	var freeze = 0.0
 	var amp = 0.0
-	var distribution = PI / 6.0
+	var distribution = PI / 18.0
 	var num = 1
 	var cd = 0.4
 	var bullet_speed = 4.0
@@ -66,6 +70,8 @@ class WSpark3:
 			preload("res://scenes/widgets/SimpleLight.tscn").instance()
 			)
 		bullet.get_child(bullet.get_child_count() - 1).energy = 0.3
+	func upgrade():
+		return null
 # 散射弹药
 class WShock1:
 	var value = 2.0
@@ -79,7 +85,38 @@ class WShock1:
 	var distance = 100
 	func on_bullet_generated(bullet: Node2D):
 		pass
+	func upgrade():
+		return WShock2.new()
 
+class WShock2:
+	var value = 3.0
+	var freeze = 0.3
+	var amp = 0.0
+	var distribution = PI / 3.0
+	var num = 7
+	var cd = 0.6
+	var bullet_speed = 7.0
+	var tag = 'b'
+	var distance = 100
+	func on_bullet_generated(bullet: Node2D):
+		pass
+	func upgrade():
+		return WShock3.new()
+
+class WShock3:
+	var value = 3.0
+	var freeze = 0.3
+	var amp = 0.0
+	var distribution = PI / 3.0
+	var num = 9
+	var cd = 0.6
+	var bullet_speed = 7.0
+	var tag = 'b'
+	var distance = 120
+	func on_bullet_generated(bullet: Node2D):
+		pass
+	func upgrade():
+		return null
 # 简单装备类
 class SimpleBuff:
 	func equip_on(player):
@@ -130,3 +167,31 @@ class BfMaxHp:
 		return "最大生命值增加%.0f(不恢复)" % value
 	func get_cost():
 		return (value * 2) as int
+
+class BfWeaponUpgrade:
+	var weapon
+	var pic := preload("res://assets/spark.png")
+	func _init(weapon):
+		self.weapon = weapon
+	func equip_on(player):
+		player.weapon_equip(weapon)
+	func equip_off(player):
+		pass
+	func get_description():
+		return "升级当前装备"
+	func get_cost():
+		return 100
+
+class BfAutoHeal:
+	var value = 1.0
+	var pic := preload("res://assets/spark.png")
+	func _init(value):
+		self.value = value
+	func equip_on(player):
+		player.auto_heal += value
+	func equip_off(player):
+		player.auto_heal -= value
+	func get_description():
+		return "每%.1f恢复%.0f生命值" % [Config.heal_time, value]
+	func get_cost():
+		return (value * 20) as int

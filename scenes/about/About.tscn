@@ -1,7 +1,12 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/Tiles/32.png" type="Texture" id=1]
 [ext_resource path="res://scenes/about/Exit.gd" type="Script" id=2]
+[ext_resource path="res://assets/rpgItems.png" type="Texture" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 3 )
+region = Rect2( 18.0188, 81.9229, 11.9196, 11.5791 )
 
 [node name="PanelContainer" type="PanelContainer"]
 margin_left = 229.0
@@ -20,19 +25,20 @@ margin_bottom = 308.0
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 margin_right = 541.0
-margin_bottom = 159.0
+margin_bottom = 186.0
 custom_colors/font_color = Color( 0.247059, 0.694118, 0.74902, 1 )
 text = "玩法：双摇杆控制，找到传送门进入下一层，尽量到达最高层。
+获取硬币在每层结束时进行升级。
 注意：建议不要关闭开发模式，否则遇到奇怪的问题只能退出重进。
 可能包含各种奇怪的bug或者缺陷，比如诡异的索敌距离，奇怪的碰撞检测。
 gitee：https://gitee.com/aaicy64/fk-simple-rogu
-难度调节按钮暂时没啥用，但是初始角色可以调。
+困难模式会使敌人伤害增加。
 "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 163.0
+margin_top = 190.0
 margin_right = 541.0
-margin_bottom = 195.0
+margin_bottom = 222.0
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
 margin_right = 32.0
@@ -47,9 +53,26 @@ margin_bottom = 28.0
 custom_colors/font_color = Color( 0.247059, 0.694118, 0.74902, 1 )
 text = "芝士传送门"
 
-[node name="Exit" type="Button" parent="VBoxContainer"]
-margin_top = 199.0
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 226.0
 margin_right = 541.0
-margin_bottom = 231.0
+margin_bottom = 250.0
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer3"]
+margin_right = 11.0
+margin_bottom = 24.0
+texture = SubResource( 1 )
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3"]
+margin_left = 15.0
+margin_right = 83.0
+margin_bottom = 24.0
+custom_colors/font_color = Color( 0.247059, 0.694118, 0.74902, 1 )
+text = " 芝士硬币"
+
+[node name="Exit" type="Button" parent="VBoxContainer"]
+margin_top = 254.0
+margin_right = 541.0
+margin_bottom = 286.0
 text = "返回"
 script = ExtResource( 2 )

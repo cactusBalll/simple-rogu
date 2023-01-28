@@ -17,13 +17,23 @@ func _ready():
 		$ScrollContainer/HBoxContainer.add_child(card)
 		upgrades["%d" % i] = buff
 		card.connect("pushed", self, "apply_upgrade")
+	var player = $"../../Player"
+	var weapon_upgraded = player.weapon.upgrade()
+	if weapon_upgraded != null:
+		var buff = Weapons.BfWeaponUpgrade.new(weapon_upgraded)
+		var card = WidgetFactory.build_upgrade_card(
+			"weapon",
+			buff.pic,
+			buff.get_cost(),
+			buff.get_description()
+		)
+		upgrades["weapon"] = buff
+		card.connect("pushed", self, "apply_upgrade")
+		$ScrollContainer/HBoxContainer.add_child(card)
 	$next.connect("pressed", self, "pass_upgrade")
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 func pass_upgrade():
 	get_tree().paused = false
 	queue_free()
@@ -35,12 +45,16 @@ func apply_upgrade(idx):
 	GlobalState.coin -= buff.get_cost()
 	get_tree().paused = false
 	queue_free()
+
+
 func get_random_upgrade():
 	var l = randi() % GlobalState.level + 1
-	match randi() % 3:
+	match randi() % 4:
 		0: 
 			return Weapons.BfAtk.new(l)
 		1:
 			return Weapons.BfHeal.new(l * 25)
 		2:
 			return Weapons.BfMaxHp.new(l * 10)
+		3:
+			return Weapons.BfAutoHeal.new(1.0)

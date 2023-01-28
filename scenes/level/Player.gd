@@ -150,6 +150,8 @@ var buffs := []
 func buff_equip(buff):
 	buff.equip_on(self)
 	buffs.append(buff)
+	emit_signal("hp_changed", hp, max_hp)
 func buff_not_equip(buff):
 	buff.equip_off(self)
 	buffs.erase(buff)
+	emit_signal("hp_changed", hp, max_hp)
