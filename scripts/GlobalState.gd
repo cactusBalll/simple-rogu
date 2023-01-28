@@ -29,7 +29,7 @@ func reset():
 	level = 1
 	difficulty = 0
 	starter = 0
-	
+	coin = 0
 	#map_size = 55
 	
 var score = 0
@@ -37,4 +37,11 @@ var level = 1
 
 func add_score(n: int):
 	score += n
+	
+
 #var map_size = 55
+
+var coin = 0
+
+func add_coin(n: int):
+	coin += n

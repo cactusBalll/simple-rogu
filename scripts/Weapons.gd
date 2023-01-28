@@ -68,7 +68,7 @@ class WSpark3:
 		bullet.get_child(bullet.get_child_count() - 1).energy = 0.3
 # 散射弹药
 class WShock1:
-	var value = 7.0
+	var value = 2.0
 	var freeze = 0.3
 	var amp = 0.0
 	var distribution = PI / 3.0
@@ -86,5 +86,47 @@ class SimpleBuff:
 		pass
 	func equip_off(player):
 		pass
+	func get_description():
+		return ""
+	func get_cost():
+		return 0
 
-
+class BfAtk:
+	var value = 1.0
+	var pic := preload("res://assets/spark.png")
+	func _init(value):
+		self.value = value
+	func equip_on(player):
+		player.extra_atk += value
+	func equip_off(player):
+		player.extra_atk -= value
+	func get_description():
+		return "额外攻击力增加%.0f" % value
+	func get_cost():
+		return (value * 10) as int
+class BfHeal:
+	var value = 25.0
+	var pic := preload("res://assets/spark.png")
+	func _init(value):
+		self.value = value
+	func equip_on(player):
+		player.hp = clamp(player.hp + value, 0, player.max_hp)
+	func equip_off(player):
+		pass
+	func get_description():
+		return "恢复生命值%.0f" % value
+	func get_cost():
+		return (value / 2) as int
+class BfMaxHp:
+	var value = 10.0
+	var pic := preload("res://assets/spark.png")
+	func _init(value):
+		self.value = value
+	func equip_on(player):
+		player.max_hp += value
+	func equip_off(player):
+		player.max_hp -= value
+	func get_description():
+		return "最大生命值增加%.0f(不恢复)" % value
+	func get_cost():
+		return (value * 2) as int

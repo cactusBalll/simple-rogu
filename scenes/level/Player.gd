@@ -29,7 +29,8 @@ var velocity: Vector2 = Vector2(0,0)
 export(float) var atk_cd = 0.5
 var weapon = null
 
-
+var extra_atk = 0.0
+var extra_amp = 0.0
 
 
 var auto_heal = 0.0
@@ -94,6 +95,8 @@ func perform_attack():
 			b.velocity =  Vector2(1,0).rotated(angle_l + randf() * weapon.distribution)
 			b.position = position + b.velocity * speed * 5
 			b.config_bullet_with(weapon)
+			b.value += extra_atk
+			b.amp += extra_amp
 			#print(b.position)
 			level.add_child(b)
 
@@ -141,3 +144,12 @@ func heal():
 func weapon_equip(weapon):
 	atk_cd = weapon.cd
 	self.weapon = weapon
+
+
+var buffs := []
+func buff_equip(buff):
+	buff.equip_on(self)
+	buffs.append(buff)
+func buff_not_equip(buff):
+	buff.equip_off(self)
+	buffs.erase(buff)

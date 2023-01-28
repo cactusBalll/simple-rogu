@@ -50,6 +50,7 @@ config/icon="res://assets/icon/220905.png"
 Config="*res://scenes/config.gd"
 GlobalState="*res://scripts/GlobalState.gd"
 LevelState="*res://scripts/LevelState.gd"
+WidgetFactory="*res://scripts/WidgetFactory.gd"
 
 [display]
 

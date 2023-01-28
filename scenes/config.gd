@@ -8,3 +8,4 @@ var minor_version = 0
 var patch = 1
 var score_scale = 10
 var developer_mode = false
+var coin_density = 2
