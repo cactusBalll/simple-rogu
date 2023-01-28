@@ -61,7 +61,7 @@ func _physics_process(delta):
 onready var freeze_timer := $FreezeTimer	
 var freezed = false
 func attacked(damage: Damage):
-	var val = damage.value - defend * (1 - damage.amp)
+	var val = clamp(damage.value - defend * (1 - damage.amp), 1.0, INF)
 	hp -= val
 	emit_signal("hp_changed", hp, max_hp)
 	if damage.freeze > 0:

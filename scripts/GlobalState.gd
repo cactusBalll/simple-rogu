@@ -10,7 +10,7 @@ func config_player_0(player):
 	player.max_hp = 100.0
 	player.auto_heal = 1.0
 	player.weapon_equip(Weapons.WSpark1.new())
-	#player.skill_equip(Weapons.SkInvincible.new())
+	player.skill_equip(Weapons.SkHeavyArmor.new())
 	
 func config_player_1(player):
 	player.hp = 50.0

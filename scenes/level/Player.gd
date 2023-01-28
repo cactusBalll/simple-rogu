@@ -20,7 +20,7 @@ signal hp_changed(hp, max_hp)
 var hp = 100.0
 var max_hp = 100.0
 
-var skill
+var skill = null
 var skill_progress = 0.0
 var skill_cd = 1.0
 
@@ -145,7 +145,7 @@ func _physics_process(delta):
 # since we implement duck type, there's no explicit interface
 # but every mob should implement this method
 func attacked(damage: Damage):
-	var val = damage.value - defend * (1 - damage.amp)
+	var val = clamp(damage.value - defend * (1 - damage.amp), 1.0, INF)
 	if invincible:
 		val = 0
 	hp -= val
@@ -186,12 +186,15 @@ func buff_not_equip(buff):
 
 
 func skill_equip(skill):
+	if self.skill != null:
+		skill_not_equip(self.skill)
 	self.skill = skill
 	self.skill_cd = skill.cd
 	self.skill_progress = 0.0
 	skill.equip_on(self)
 	var btn = $"../UILayer/Skill"
-	btn.disabled = false
+	if skill.can_trig:
+		btn.disabled = false
 	btn.text = skill.get_description()
 	pass
 func skill_not_equip(skill):

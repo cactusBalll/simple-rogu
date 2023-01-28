@@ -44,13 +44,24 @@ func regenerate_level():
 		gen_coin()
 	for i in range(clamp(GlobalState.level/5, 1, 5)):
 		gen_chest()
+	for i in range(30 - GlobalState.difficulty * 20 
+			+ GlobalState.level * (Config.coin_density - GlobalState.difficulty)):
+		gen_hp_portion()
 func gen_coin():
 	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
 	var coin = preload("res://scenes/objekts/Coin.tscn").instance()
 	coin.position = pos
+	coin.add_to_group("things")
 	add_child(coin)
 	pass
-
+func gen_hp_portion():
+	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
+	var portion = preload("res://scenes/objekts/HpPortion.tscn").instance()
+	portion.value = ceil(randf() * (GlobalState.level * 2 + 10.0))
+	portion.position = pos
+	portion.add_to_group("things")
+	add_child(portion)
+	pass
 func gen_chest():
 	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
 	print(pos)
@@ -59,6 +70,7 @@ func gen_chest():
 	chest.containing = sk
 	chest.get_node("Panel/info").text = "是否将技能替换为" + sk.get_description()
 	chest.position = pos
+	chest.add_to_group("things")
 	add_child(chest)
 func go_next_level():
 	var upgrade_menu = preload("res://scenes/upgrade_menu/UpgradeMenu.tscn").instance()
@@ -68,8 +80,11 @@ func go_next_level():
 	GlobalState.score += GlobalState.level * Config.score_scale
 	GlobalState.level += 1
 	LevelState.reset()
+	LevelState.monster_density = ceil(GlobalState.level * (100 + GlobalState.difficulty * 40))
 	for e in get_tree().get_nodes_in_group("enemy"):
 		e.queue_free()
+	for t in get_tree().get_nodes_in_group("things"):
+		t.queue_free()
 	cportal.queue_free()
 	
 	$UILayer/LoadingPopup.show()

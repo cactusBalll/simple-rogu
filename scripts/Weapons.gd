@@ -201,15 +201,18 @@ class BfAutoHeal:
 
 static func get_rand_skill():
 	var l = randi() % GlobalState.level + 1
-	match randi() % 10:
-		0,1,2,3:
+	match randi() % 4:
+		0:
 			return SkTorch.new()
-		4,5,6,7:
+		1:
 			return SkHeal.new(l * 20.0)
-		9,9:
+		2:
 			return SkInvincible.new()
+		3:
+			return SkHeavyArmor.new()
 class SkTorch:
 	var cd = 20.0
+	var can_trig = true
 	func on_trig(player):
 		var torch = preload("res://scenes/objekts/Torch.tscn").instance()
 		torch.position = player.position
@@ -224,6 +227,7 @@ class SkTorch:
 class SkHeal:
 	var value = 20.0
 	var cd = 15.0
+	var can_trig = true
 	func _init(value):
 		self.value = value
 	func on_trig(player):
@@ -238,6 +242,7 @@ class SkHeal:
 
 class SkInvincible:
 	var cd = 60.0
+	var can_trig = true
 	func on_trig(player):
 		player.activate_invincible()
 	func get_description():
@@ -246,3 +251,17 @@ class SkInvincible:
 		pass
 	func equip_off(player):
 		pass
+
+class SkHeavyArmor:
+	var cd = 0.0
+	var can_trig = false
+	func on_trig(player):
+		pass
+	func get_description():
+		return "重甲(高额减伤但移速减慢)"
+	func equip_on(player):
+		player.defend += 20
+		player.speed -= 1
+	func equip_off(player):
+		player.defend -= 20
+		player.speed += 1
