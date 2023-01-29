@@ -36,7 +36,7 @@ var weapon = null
 
 var extra_atk = 0.0
 var extra_amp = 0.0
-
+var extra_greedy = 0.0
 
 var auto_heal = 0.0
 # Called when the node enters the scene tree for the first time.
@@ -114,6 +114,7 @@ func perform_attack():
 			b.config_bullet_with(weapon)
 			b.value += extra_atk
 			b.amp += extra_amp
+			b.greedy += extra_greedy
 			#print(b.position)
 			level.add_child(b)
 
@@ -171,6 +172,7 @@ func heal():
 
 func weapon_equip(weapon):
 	atk_cd = weapon.cd
+	atkcd_timer.wait_time = atk_cd
 	self.weapon = weapon
 
 

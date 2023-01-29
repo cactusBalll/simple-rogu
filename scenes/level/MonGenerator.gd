@@ -87,6 +87,7 @@ func exec_gen_monster():
 		sl.score = 4
 		sl.speed = 5
 		sl.get_node("Sprite").texture = preload("res://assets/enemy/exploder.png")
+		sl.add_child(preload("res://scenes/widgets/SimpleParticle.tscn").instance())
 		sl.get_node("Sprite").scale = Vector2(1,1)
 		if GlobalState.difficulty == 1:
 			sl.damage *= Config.difficulty_atk_ratio

@@ -37,6 +37,8 @@ class WSpark1:
 	var bullet_speed = 4.0
 	var tag = 'b'
 	var distance = INF
+	func get_description():
+		return "火花1"
 	func on_bullet_generated(bullet: Node2D):
 		pass
 	func upgrade():
@@ -51,6 +53,8 @@ class WSpark2:
 	var bullet_speed = 4.0
 	var tag = 'b'
 	var distance = INF
+	func get_description():
+		return "火花2"
 	func on_bullet_generated(bullet: Node2D):
 		pass
 	func upgrade():
@@ -65,6 +69,8 @@ class WSpark3:
 	var bullet_speed = 4.0
 	var tag = 'b'
 	var distance = INF
+	func get_description():
+		return "火花3"
 	func on_bullet_generated(bullet: Node2D):
 		bullet.add_child(
 			preload("res://scenes/widgets/SimpleLight.tscn").instance()
@@ -83,6 +89,8 @@ class WShock1:
 	var bullet_speed = 7.0
 	var tag = 'b'
 	var distance = 100
+	func get_description():
+		return "散弹1"
 	func on_bullet_generated(bullet: Node2D):
 		pass
 	func upgrade():
@@ -98,6 +106,8 @@ class WShock2:
 	var bullet_speed = 7.0
 	var tag = 'b'
 	var distance = 100
+	func get_description():
+		return "散弹2"
 	func on_bullet_generated(bullet: Node2D):
 		pass
 	func upgrade():
@@ -113,10 +123,65 @@ class WShock3:
 	var bullet_speed = 7.0
 	var tag = 'b'
 	var distance = 120
+	func get_description():
+		return "散弹3"
 	func on_bullet_generated(bullet: Node2D):
 		pass
 	func upgrade():
 		return null
+# 高能单发弹药	
+class WShot1:
+	var value = 10.0
+	var freeze = 0.6
+	var amp = 0.0
+	var distribution = 0.0
+	var num = 1
+	var cd = 1.8
+	var bullet_speed = 12.0
+	var tag = 'b'
+	var distance = INF
+	func get_description():
+		return "穿凿1"
+	func on_bullet_generated(bullet: Node2D):
+		#bullet.get_node("Sprite").texture = preload("res://assets/particle/rred.png")
+		bullet.add_child(preload("res://scenes/widgets/MeParticle.tscn").instance())
+	func upgrade():
+		return WShot2.new()
+
+class WShot2:
+	var value = 15.0
+	var freeze = 0.6
+	var amp = 0.0
+	var distribution = 0.0
+	var num = 1
+	var cd = 1.4
+	var bullet_speed = 12.0
+	var tag = 'b'
+	var distance = INF
+	func get_description():
+		return "穿凿2"
+	func on_bullet_generated(bullet: Node2D):
+		bullet.add_child(preload("res://scenes/widgets/MeParticle.tscn").instance())
+	func upgrade():
+		return WShot3.new()
+
+class WShot3:
+	var value = 20.0
+	var freeze = 0.6
+	var amp = 0.0
+	var distribution = 0.0
+	var num = 1
+	var cd = 1.0
+	var bullet_speed = 12.0
+	var tag = 'b'
+	var distance = INF
+	func get_description():
+		return "穿凿3"
+	func on_bullet_generated(bullet: Node2D):
+		bullet.add_child(preload("res://scenes/widgets/MeParticle.tscn").instance())
+	func upgrade():
+		return null
+		
 # 简单装备类
 class SimpleBuff:
 	func equip_on(player):
@@ -196,12 +261,24 @@ class BfAutoHeal:
 	func get_cost():
 		return (value * 20) as int
 
-
+class BfGreedy:
+	var value = 1.0
+	var pic := preload("res://assets/spark.png")
+	func _init(value):
+		self.value = value
+	func equip_on(player):
+		player.extra_greedy += value
+	func equip_off(player):
+		player.extra_greedy -= value
+	func get_description():
+		return "添加%.0f点吸血" % [value]
+	func get_cost():
+		return (value * 50) as int
 # 主动技能
 
 static func get_rand_skill():
 	var l = randi() % GlobalState.level + 1
-	match randi() % 4:
+	match randi() % 5:
 		0:
 			return SkTorch.new()
 		1:
@@ -210,6 +287,8 @@ static func get_rand_skill():
 			return SkInvincible.new()
 		3:
 			return SkHeavyArmor.new()
+		4:
+			return SkGreedy.new()
 class SkTorch:
 	var cd = 20.0
 	var can_trig = true
@@ -265,3 +344,18 @@ class SkHeavyArmor:
 	func equip_off(player):
 		player.defend -= 20
 		player.speed += 1
+
+class SkGreedy:
+	var cd = 10.0
+	var can_trig = true
+	func on_trig(player):
+		player.hp = clamp(player.hp + 10.0, 0, player.max_hp)
+		player.emit_signal("hp_changed", player.hp, player.max_hp)
+	func get_description():
+		return "吸血+1(被动)，治疗术+10.0"
+	func equip_on(player):
+		player.extra_greedy += 1.0
+	func equip_off(player):
+		player.extra_greedy -= 1.0
+
+

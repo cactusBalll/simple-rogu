@@ -21,5 +21,8 @@ func on_player_exit(body):
 	pass
 func on_dialog_confirmed(ok):
 	if ok:
-		GlobalState.player.get_ref().skill_equip(containing)
+		if containing.has_method("on_trig"):
+			GlobalState.player.get_ref().skill_equip(containing)
+		elif containing.has_method("on_bullet_generated"):
+			GlobalState.player.get_ref().weapon_equip(containing)
 	queue_free()

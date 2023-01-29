@@ -15,6 +15,8 @@ var speed_scale = Config.speed_scale
 var velocity = Vector2(0,0)
 
 onready var sprite = $Sprite
+
+var greedy = 0.0 # 吸血
 #var Damage := preload("res://scripts/Damage.gd")
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -35,6 +37,9 @@ func _physics_process(delta):
 		var collider := collide_info.collider
 		if collider.has_method("attacked"):
 			collider.attacked(get_damage())
+			var p = GlobalState.player.get_ref()
+			p.hp = clamp(p.hp + greedy, 0, p.max_hp)
+			p.emit_signal("hp_changed", p.hp, p.max_hp)
 		queue_free()
 		return
 	if distance_moved >= distance:

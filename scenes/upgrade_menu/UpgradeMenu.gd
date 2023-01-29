@@ -58,3 +58,5 @@ func get_random_upgrade():
 			return Weapons.BfMaxHp.new(l * 10)
 		3:
 			return Weapons.BfAutoHeal.new(1.0)
+		4:
+			return Weapons.BfGreedy.new(1.0)

@@ -44,6 +44,8 @@ func regenerate_level():
 		gen_coin()
 	for i in range(clamp(GlobalState.level/5, 1, 5)):
 		gen_chest()
+	for i in range(clamp(GlobalState.level/10, 1, 3)):
+		gen_weapon_chest()
 	for i in range(30 - GlobalState.difficulty * 20 
 			+ GlobalState.level * (Config.coin_density - GlobalState.difficulty)):
 		gen_hp_portion()
@@ -64,11 +66,21 @@ func gen_hp_portion():
 	pass
 func gen_chest():
 	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
-	print(pos)
+	#print(pos)
 	var chest = preload("res://scenes/objekts/Chest.tscn").instance()
 	var sk = Weapons.get_rand_skill()
 	chest.containing = sk
 	chest.get_node("Panel/info").text = "是否将技能替换为" + sk.get_description()
+	chest.position = pos
+	chest.add_to_group("things")
+	add_child(chest)
+func gen_weapon_chest():
+	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
+	print(pos)
+	var chest = preload("res://scenes/objekts/Chest.tscn").instance()
+	var sk = Weapons.WShot1.new()
+	chest.containing = sk
+	chest.get_node("Panel/info").text = "是否将主武器替换为" + sk.get_description()
 	chest.position = pos
 	chest.add_to_group("things")
 	add_child(chest)
