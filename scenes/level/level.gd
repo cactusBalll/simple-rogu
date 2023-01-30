@@ -14,6 +14,9 @@ func _ready():
 	$Player.connect("hp_changed", self, "game_over")
 	$UILayer/DeveloperMenu.visible = Config.developer_mode
 	GlobalState.player = weakref($Player)
+	GlobalState.levelSc = weakref(self)
+	
+	$UILayer/Maho.connect("pressed", $Player, "maho_powar")
 	pass # Replace with function body.
 func _process(delta):
 	$UILayer/ScoreBoard.text = "{0}  level: {1}".format({0: GlobalState.score, 1: GlobalState.level})
@@ -38,7 +41,7 @@ func regenerate_level():
 	$UILayer/DeveloperMenu/VBoxContainer/portalPos.text = "portal: %.1f,%.1f"%[pos.x, pos.y]
 	add_child(portal)
 	cportal = portal
-	
+	LevelState.portal_pos = portal.position
 	# 生成硬币
 	for i in range(20 + GlobalState.level * Config.coin_density):
 		gen_coin()
@@ -49,6 +52,16 @@ func regenerate_level():
 	for i in range(30 - GlobalState.difficulty * 20 
 			+ GlobalState.level * (Config.coin_density - GlobalState.difficulty)):
 		gen_hp_portion()
+	if not GlobalState.madoka_genned:
+		gen_madoka()
+func gen_madoka():
+	#var pos = $Player.position + Vector2(64,64)
+	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
+	#print(pos)
+	var madoka = preload("res://scenes/bounds/madoka.tscn").instance()
+	madoka.position = pos
+	madoka.add_to_group("things")
+	add_child(madoka)
 func gen_coin():
 	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
 	var coin = preload("res://scenes/objekts/Coin.tscn").instance()

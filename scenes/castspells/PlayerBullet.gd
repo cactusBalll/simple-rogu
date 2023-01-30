@@ -39,6 +39,8 @@ func _physics_process(delta):
 			collider.attacked(get_damage())
 			var p = GlobalState.player.get_ref()
 			p.hp = clamp(p.hp + greedy, 0, p.max_hp)
+			if p.mahoshojo_enabled and collider.hp <= 0:
+				p.polution = clamp(p.polution - 4, 0, p.max_polution)
 			p.emit_signal("hp_changed", p.hp, p.max_hp)
 		queue_free()
 		return

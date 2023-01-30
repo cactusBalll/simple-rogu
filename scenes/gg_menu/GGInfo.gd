@@ -16,7 +16,10 @@ const info = [
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	text = info[randi() % info.size()]
+	if GlobalState.dead_cause == null:
+		text = info[randi() % info.size()]
+	else:
+		text = GlobalState.dead_cause
 	pass # Replace with function body.
 
 

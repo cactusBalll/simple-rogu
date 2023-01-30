@@ -19,7 +19,32 @@ export(bool) var joystick = true
 signal hp_changed(hp, max_hp)
 var hp = 100.0
 var max_hp = 100.0
+# begin mahoshojo
+var mahoshojo_enabled := false
+var polution := 0.0
+var max_polution := 100.0
+var polute_timer: Timer = null
+onready var maho_button := $"../UILayer/Maho"
+func polute():
+	#print("called")
+	polution += 5.0
+func endable_mahoshojo():
+	GlobalState.madoka_genned = true
+	mahoshojo_enabled = true
+	polute_timer.start()
+	soulgem_bar.visible = true
+	maho_button.visible = true
 
+func maho_powar():
+	var buff = Weapons.TBMaho.new()
+	timed_buff_on(buff)
+	polution += 40.0
+	$"../UILayer/Maho".disabled = true
+	get_tree().create_timer(65).connect("timeout", self,"enable_maho_powar_btn")
+func enable_maho_powar_btn():
+	$"../UILayer/Maho".disabled = false
+# end mahoshojo
+	
 var skill = null
 var skill_progress = 0.0
 var skill_cd = 1.0
@@ -62,6 +87,10 @@ func _ready():
 	invincible_timer = Timer.new()
 	invincible_timer.connect("timeout", self, "deinvincible")
 	self.add_child(invincible_timer)
+	polute_timer = Timer.new()
+	polute_timer.wait_time = Config.pollute_time
+	polute_timer.connect("timeout", self, "polute")
+	self.add_child(polute_timer)
 	
 	emit_signal("hp_changed", hp, max_hp)
 	pass # Replace with function body.
@@ -69,10 +98,18 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 onready var skill_cd_bar = $"../UILayer/SkillCDBar"
+onready var soulgem_bar = $"../UILayer/SoulGem"
 func _process(delta):
 	skill_progress = clamp(skill_progress + delta, 0, skill_cd)
 	skill_cd_bar.value = skill_progress
 	skill_cd_bar.max_value = skill_cd
+	#print(polution, max_polution)
+	soulgem_bar.max_value = max_polution
+	soulgem_bar.value = polution
+	if mahoshojo_enabled and polution >= max_polution:
+		GlobalState.dead_cause = "你付出了代价"
+		get_tree().change_scene("res://scenes/gg_menu/GGMenu.tscn")
+	
 	if freezed or joystick:
 		return
 	velocity = Vector2(0,0)
@@ -146,7 +183,7 @@ func _physics_process(delta):
 # since we implement duck type, there's no explicit interface
 # but every mob should implement this method
 func attacked(damage: Damage):
-	var val = clamp(damage.value - defend * (1 - damage.amp), 1.0, INF)
+	var val = clamp(damage.value - defend * (max(1 - damage.amp, 0.0)), 1.0, INF)
 	if invincible:
 		val = 0
 	hp -= val
@@ -185,8 +222,11 @@ func buff_not_equip(buff):
 	buff.equip_off(self)
 	buffs.erase(buff)
 	emit_signal("hp_changed", hp, max_hp)
-
-
+var timed_buffs := []
+func timed_buff_on(buff):
+	buff.equip_on(self)
+	timed_buffs.append(buff)
+	get_tree().create_timer(buff.last_time).connect("timeout", buff, "equip_off")
 func skill_equip(skill):
 	if self.skill != null:
 		skill_not_equip(self.skill)

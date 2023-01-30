@@ -278,7 +278,7 @@ class BfGreedy:
 
 static func get_rand_skill():
 	var l = randi() % GlobalState.level + 1
-	match randi() % 5:
+	match randi() % 7:
 		0:
 			return SkTorch.new()
 		1:
@@ -289,6 +289,10 @@ static func get_rand_skill():
 			return SkHeavyArmor.new()
 		4:
 			return SkGreedy.new()
+		5:
+			return SkPredict.new()
+		6:
+			return SkFlareZone.new(l)
 class SkTorch:
 	var cd = 20.0
 	var can_trig = true
@@ -358,4 +362,84 @@ class SkGreedy:
 	func equip_off(player):
 		player.extra_greedy -= 1.0
 
+class SkPredict:
+	var cd = 10.0
+	var can_trig = true
+	func on_trig(player):
+		var direct = preload("res://scenes/widgets/MeParticle.tscn").instance()
+		var b = preload("res://scenes/castspells/PlayerBullet.tscn").instance()
+		b.value = 0.0
+		b.speed = 1.0
+		b.add_child(direct)
+		var player_pos = GlobalState.player.get_ref().position
+		var vec: Vector2 = (LevelState.portal_pos-player_pos).normalized()
+		b.position = vec * 30.0 + player_pos
+		b.velocity = vec
+		GlobalState.player.get_ref().get_node("..").add_child(b)
+	func get_description():
+		return "最大生命+25(被动),感知传送门方向"
+	func equip_on(player):
+		player.max_hp += 25.0
+	func equip_off(player):
+		player.max_hp -= 25.0
 
+
+class SkFlareZone:
+	var cd setget ,_get_cd
+	var can_trig = true
+	var value = 1.0
+	func _init(value):
+		self.value = value
+	func _get_cd():
+		return value * 30.0
+	func on_trig(player):
+		var player_pos = GlobalState.player.get_ref().position
+		for i in range(-3, 4):
+			for j in range(-3,4):
+				if i != 0 or j != 0:
+					var zone = preload("res://scenes/buff_zones/BuffZone.tscn").instance()
+					zone.config(
+						3.0,
+						0.5,
+						funcref(self, "_effect_callback"),
+						preload("res://assets/flare.png")
+					)
+					zone.add_child(preload("res://scenes/widgets/FlareParticle.tscn").instance())
+					zone.position = player_pos + Vector2(i * Config.bufzone_size, j * Config.bufzone_size)
+					GlobalState.levelSc.get_ref().add_child(zone)
+	func get_description():
+		return "生成火焰区域:%.0f" % value
+	func equip_on(player):
+		pass
+	func equip_off(player):
+		pass
+	
+	func _effect_callback(bodys: Array):
+		#print(bodys)
+		for body in bodys:
+			if not body.has_method("vjoystick_move"):
+				body.attacked(Damage.new(value, 0.0, 0.0))
+
+
+# Timed Buff
+class TBMaho:
+	var last_time = 60.0
+	var player
+	var particle
+	func timed_buff():
+		pass
+	func equip_on(player):
+		self.player = player
+		player.extra_atk += 20.0
+		player.defend += 40.0
+		player.extra_amp += 1.0
+		self.particle = preload("res://scenes/widgets/PinkParticle.tscn").instance()
+		player.add_child(particle)
+	func equip_off():
+		print("called")
+		player.extra_atk -= 20.0
+		player.defend -= 40.0
+		player.extra_amp -= 1.0
+		player.remove_child(particle)
+		
+		player.timed_buffs.erase(self)

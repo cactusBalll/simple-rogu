@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[sub_resource type="CanvasItemMaterial" id=4]
+light_mode = 2
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.0252366, 1 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.135647, 0.135647, 0.135647, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 15.47
+initial_velocity_random = 0.04
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 2.0
+color = Color( 0.898039, 0.466667, 0.176471, 1 )
+color_ramp = SubResource( 2 )
+
+[node name="FlareParticle" type="Particles2D"]
+material = SubResource( 4 )
+amount = 16
+lifetime = 2.0
+preprocess = 5.83
+process_material = SubResource( 3 )

@@ -4,6 +4,9 @@ extends Node
 var difficulty = 0
 var starter = 0
 var player
+var levelSc
+var dead_cause = null
+
 
 func config_player_0(player):
 	player.hp = 100.0
@@ -11,7 +14,7 @@ func config_player_0(player):
 	player.auto_heal = 1.0
 	player.weapon_equip(Weapons.WSpark1.new())
 	#player.weapon_equip(Weapons.WShot1.new())
-	#player.skill_equip(Weapons.SkHeavyArmor.new())
+	#player.skill_equip(Weapons.SkFlareZone.new(1.0))
 	
 func config_player_1(player):
 	player.hp = 50.0
@@ -32,6 +35,8 @@ func reset():
 	difficulty = 0
 	starter = 0
 	coin = 0
+	dead_cause = null
+	madoka_genned = false
 	#map_size = 55
 	
 var score = 0
@@ -47,3 +52,6 @@ var coin = 0
 
 func add_coin(n: int):
 	coin += n
+
+
+var madoka_genned = false
