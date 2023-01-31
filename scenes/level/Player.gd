@@ -150,7 +150,7 @@ func perform_attack():
 			var angle = atk_vec.normalized().angle() 
 			var angle_u = angle + weapon.distribution / 2.0
 			var angle_l = angle - weapon.distribution / 2.0
-			b.velocity =  velocity + Vector2(1,0).rotated(angle_l + randf() * weapon.distribution)
+			b.velocity =  Vector2(1,0).rotated(angle_l + randf() * weapon.distribution)
 			b.velocity = b.velocity.normalized()
 			b.position = position + b.velocity * speed * 5
 			b.config_bullet_with(weapon)
