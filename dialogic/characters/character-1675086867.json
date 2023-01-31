@@ -16,6 +16,6 @@
 			"path": "res://assets/chara/madoka.png"
 		}
 	],
-	"scale": 100,
-	"theme": ""
+	"scale": 50,
+	"theme": "theme-1675086497.cfg"
 }

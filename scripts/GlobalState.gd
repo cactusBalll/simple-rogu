@@ -51,7 +51,7 @@ func add_score(n: int):
 var coin = 0
 
 func add_coin(n: int):
-	coin += n
+	coin += ceil(n * clamp(level * 0.5, 1, INF))
 
 
 var madoka_genned = false

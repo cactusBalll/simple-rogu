@@ -33,7 +33,7 @@ text = "玩法：双摇杆控制，找到传送门进入下一层，尽量到达
 可能包含各种奇怪的bug或者缺陷，比如诡异的索敌距离，奇怪的碰撞检测。
 gitee：https://gitee.com/aaicy64/fk-simple-rogu
 困难模式会使敌人伤害增加。
-"
+新增一些装备，主动技能，可交互的对象"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 190.0

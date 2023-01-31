@@ -55,7 +55,7 @@ func regenerate_level():
 	if not GlobalState.madoka_genned:
 		gen_madoka()
 func gen_madoka():
-	#var pos = $Player.position + Vector2(64,64)
+#	var pos = $Player.position + Vector2(64,64)
 	var pos = $LevelMap.get_random_empty_global_pos() + Vector2(16, 16)
 	#print(pos)
 	var madoka = preload("res://scenes/bounds/madoka.tscn").instance()
