@@ -40,7 +40,8 @@ func gen_monster():
 	else:
 		exec_gen_monster()
 func exec_gen_monster():
-	if is_gen_slime:
+	var r = randf()
+	if is_gen_slime and r < 0.7:
 		if LevelState.current_monster_density >= LevelState.monster_density:
 			return
 		LevelState.current_monster_density += 1
@@ -52,7 +53,7 @@ func exec_gen_monster():
 		sl.player = player
 		sl.position = pos
 		level.add_child(sl)	
-	if GlobalState.level > 2:
+	if GlobalState.level > 2 and r > 0.7 and r < 0.9:
 		if LevelState.current_monster_density + 2 > LevelState.monster_density:
 			return
 		LevelState.current_monster_density += 2
@@ -72,7 +73,7 @@ func exec_gen_monster():
 		sl.player = player
 		sl.position = pos
 		level.add_child(sl)	
-	if GlobalState.level > 4:
+	if GlobalState.level > 4 and r > 0.9:
 		if LevelState.current_monster_density + 4 > LevelState.monster_density:
 			return
 		LevelState.current_monster_density += 4
