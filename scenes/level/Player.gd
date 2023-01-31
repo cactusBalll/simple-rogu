@@ -73,6 +73,8 @@ func _ready():
 	vjoy_move_ctrl.connect("released", self, "vjoystick_halt")
 	vjoy_atk_ctrl.connect("trimming", self, "vjoystick_attack")
 	vjoy_atk_ctrl.connect("released", self, "vjoystick_attack_halt")
+	$"../UILayer/VjRight".connect("cotrolling", self, "vjoystick_attack")
+	$"../UILayer/VjRight".connect("release", self, "vjoystick_attack_halt")
 	var btn = $"../UILayer/Skill"
 	btn.connect("pressed", self, "trig_skill")
 	GlobalState.config_player(self)
@@ -99,6 +101,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 onready var skill_cd_bar = $"../UILayer/SkillCDBar"
 onready var soulgem_bar = $"../UILayer/SoulGem"
+onready var vj_left = $"../UILayer/VjLeft"
 func _process(delta):
 	skill_progress = clamp(skill_progress + delta, 0, skill_cd)
 	skill_cd_bar.value = skill_progress
@@ -112,15 +115,16 @@ func _process(delta):
 	
 	if freezed or joystick:
 		return
-	velocity = Vector2(0,0)
-	if Input.is_action_pressed("ui_up"):
-		velocity += Vector2(0,-1)
-	if Input.is_action_pressed("ui_left"):
-		velocity += Vector2(-1,0)
-	if Input.is_action_pressed("ui_right"):
-		velocity += Vector2(1,0) 
-	if Input.is_action_pressed("ui_down"):
-		velocity += Vector2(0,1)
+#	velocity = Vector2(0,0)
+#	if Input.is_action_pressed("ui_up"):
+#		velocity += Vector2(0,-1)
+#	if Input.is_action_pressed("ui_left"):
+#		velocity += Vector2(-1,0)
+#	if Input.is_action_pressed("ui_right"):
+#		velocity += Vector2(1,0) 
+#	if Input.is_action_pressed("ui_down"):
+#		velocity += Vector2(0,1)
+	velocity = vj_left.get_output()
 
 func vjoystick_move(v: Vector2):
 	if joystick:
@@ -146,7 +150,8 @@ func perform_attack():
 			var angle = atk_vec.normalized().angle() 
 			var angle_u = angle + weapon.distribution / 2.0
 			var angle_l = angle - weapon.distribution / 2.0
-			b.velocity =  Vector2(1,0).rotated(angle_l + randf() * weapon.distribution)
+			b.velocity =  velocity + Vector2(1,0).rotated(angle_l + randf() * weapon.distribution)
+			b.velocity = b.velocity.normalized()
 			b.position = position + b.velocity * speed * 5
 			b.config_bullet_with(weapon)
 			b.value += extra_atk
@@ -158,7 +163,7 @@ func perform_attack():
 func _unhandled_input(event):
 	if freezed or joystick:
 		return
-	if event is InputEventMouseButton:
+	if false and event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			#print(get_viewport().get_mouse_position())
 			#print(position)

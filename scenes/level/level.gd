@@ -43,7 +43,7 @@ func regenerate_level():
 	cportal = portal
 	LevelState.portal_pos = portal.position
 	# 生成硬币
-	for i in range(20 + GlobalState.level * Config.coin_density):
+	for i in range(40 + GlobalState.level * Config.coin_density):
 		gen_coin()
 	for i in range(clamp(GlobalState.level/5, 1, 5)):
 		gen_chest()

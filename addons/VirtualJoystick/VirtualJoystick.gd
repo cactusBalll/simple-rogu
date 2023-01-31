@@ -44,35 +44,17 @@ func _ready():
 func _process(delta):
 	pass
 
-func _input(event):
+func _unhandled_input(event):
 	if not (event is InputEventScreenDrag) and not (event is InputEventScreenTouch):
 		return
-
-	if current_event is InputEvent and current_event.index == event.index:
-		current_event = event
-	else:
-		return
-
-	if not is_mouseover:
-		if event is InputEventScreenTouch:
-			if not event.pressed:
-				is_dragging = false
-				is_trimming = false
-				button.global_position = container.global_position
-				velocity = Vector2.ZERO
-
-				emit_signal("released")
-
-	_process_button()
-
-func _input_event(viewport, event, shape_idx):
-	if not (event is InputEventScreenDrag) and not (event is InputEventScreenTouch):
-		return
-	
+	if (position - event.position).length()  > shape.shape.radius * scale.x:
+		return 
 	current_event = event
-	
-	
+
+
 	if event is InputEventScreenTouch:
+		
+		print(event.index,event.position, event.pressed)
 		is_dragging = event.pressed
 		get_tree().set_input_as_handled()
 		if not is_dragging:
@@ -82,8 +64,28 @@ func _input_event(viewport, event, shape_idx):
 			angle = 0.0
 
 			emit_signal("released")
-	
+
 	_process_button()
+
+#func _input_event(viewport, event, shape_idx):
+#	if not (event is InputEventScreenDrag) and not (event is InputEventScreenTouch):
+#		return
+#
+#	current_event = event
+#
+#
+#	if event is InputEventScreenTouch:
+#		is_dragging = event.pressed
+#		#get_tree().set_input_as_handled()
+#		if not is_dragging:
+#			is_trimming = false
+#			button.global_position = container.global_position
+#			velocity = Vector2.ZERO
+#			angle = 0.0
+#
+#			emit_signal("released")
+#
+#	_process_button()
 
 func _process_button():
 	if is_dragging:

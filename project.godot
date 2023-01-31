@@ -79,6 +79,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/level/Player.gd"
 }, {
+"base": "Control",
+"class": "VirtualJoystick",
+"language": "GDScript",
+"path": "res://addons/joystick/virtual_joystick.gd"
+}, {
 "base": "Node",
 "class": "Weapons",
 "language": "GDScript",
@@ -99,6 +104,7 @@ _global_script_class_icons={
 "GitAPI": "",
 "HistoryRow": "",
 "Player": "",
+"VirtualJoystick": "",
 "Weapons": ""
 }
 
