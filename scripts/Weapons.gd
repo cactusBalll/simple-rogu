@@ -421,7 +421,7 @@ class SkFlareZone:
 				body.attacked(Damage.new(value, 0.0, 0.0))
 
 
-# Timed Buff
+# Timed Buff 
 class TBMaho:
 	var last_time = 60.0
 	var player
@@ -441,5 +441,5 @@ class TBMaho:
 		player.defend -= 40.0
 		player.extra_amp -= 1.0
 		player.remove_child(particle)
-		
+		# 必须有这个调用
 		player.timed_buffs.erase(self)
